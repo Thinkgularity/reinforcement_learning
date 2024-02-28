@@ -21,8 +21,8 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 
-EXPERIMENT_NAME = "-cartpole_hidden_state_64"  # or -cartpole_net_architecture_v1
-HIDDEN_SIZE = 64
+EXPERIMENT_NAME = "-cartpole_hidden_state_32"  # or -cartpole_net_architecture_v1
+HIDDEN_SIZE = 32
 BATCH_SIZE = 16
 PERCENTILE = 70
 

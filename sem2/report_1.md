@@ -4,28 +4,28 @@
 При начальном значении `hidden_state=32` сходимость достигается в среднем за 44 итераций. 
 Графики функции потерь и вознаграждения приведены ниже. 
 
-<img src="sem2\loss.jpg"/>
+<img src="images/loss.jpg"/>
 
-<img src="sem2\reward_bound.jpg"/>
+<img src="images/reward_bound.jpg"/>
 
-<img src="sem2\reward_mean.jpg"/>
+<img src="images/reward_mean.jpg"/>
 
 При увеличении значения `hidden_state=64` сходимость достигается в среднем за 53 итераций. Здесь на графике есть существенные отличия между 32-мя скрытыми нейронами и 64. Увеличение числа скрытых нейронов влияет на скорость сходимости агента. Графики функции потерь и среднего вознаграждения приведены ниже. 
 
-<img src="sem2\loss.jpg"/>
+<img src="images/loss.jpg"/>
 
-<img src="sem2\reward_bound.jpg"/>
+<img src="images/reward_bound.jpg"/>
 
-<img src="sem2\reward_mean.jpg"/>
+<img src="images/reward_mean.jpg"/>
 
 Третье значение `hidden_state=128` сходимость достигается в среднем за 44 итераций. В данном случае, мы вернулись к тому варианту от которого ушли в случае с 32 скрытыми нейронами.  
 Графики функции потерь и среднего вознаграждения приведены ниже. 
 
-<img src="sem2\loss.jpg"/>
+<img src="images/loss.jpg"/>
 
-<img src="sem2\reward_bound.jpg"/>
+<img src="images/reward_bound.jpg"/>
 
-<img src="sem2\reward_mean.jpg"/>
+<img src="images/reward_mean.jpg"/>
 
 Четвертое значение `hidden_state=256` демонстрирует кардинальные отличия от предыдущих показателей. Сходимость достигается в среднем за 18 итераций - в 3 раза меньше чем при 64.
 
@@ -41,11 +41,11 @@ nn.Linear(hidden_size, n_actions)
 Можно сделать вывод, что увеличение числа скрытых нейронов не влияет на скорость сходимости агента. 
 Графики функции потерь и среднего вознаграждения приведены ниже. 
 
-<img src="sem2\loss.jpg"/>
+<img src="images/loss.jpg"/>
 
-<img src="sem2\reward_bound.jpg"/>
+<img src="images/reward_bound.jpg"/>
 
-<img src="sem2\reward_mean.jpg"/>
+<img src="images/reward_mean.jpg"/>
 
 ## 3. Видео отчет (2 балла)
 Лучший результат показала архитектура, которая имеет следующий вид: 
@@ -58,4 +58,4 @@ nn.Linear(hidden_size, n_actions)
 Для этой архитектуры сходимость достигается в среднем за 53 итераций. 
 Видео с примером работы агента приведено ниже.  
 
-<video src="sem2\video\rl-video-episode-0.mp4" width="240"/>
+<video src="video/rl-video-episode-0.mp4" width="240"/>

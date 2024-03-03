@@ -13,6 +13,7 @@ issued actions as the desired output.
 """
 
 import gymnasium as gym
+from gymnasium.wrappers import RecordVideo
 from collections import namedtuple
 import numpy as np
 from tensorboardX import SummaryWriter
@@ -21,8 +22,8 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 
-EXPERIMENT_NAME = "-cartpole_hidden_state_32"  # or -cartpole_net_architecture_v1
-HIDDEN_SIZE = 32
+EXPERIMENT_NAME = "-cartpole_hidden_state_64"  # or -cartpole_net_architecture_v1
+HIDDEN_SIZE = 64
 BATCH_SIZE = 16
 PERCENTILE = 70
 
@@ -123,3 +124,30 @@ if __name__ == "__main__":
             print("Solved!")
             break
     writer.close()
+
+
+if __name__ == "__main__":
+    env = gym.make("CartPole-v1", render_mode='rgb_array')
+    # env = gym.wrappers.Monitor(env, "recording")
+    env = RecordVideo(env, 'video')
+
+    total_reward = 0.0
+    total_steps = 0
+    observation, info = env.reset()
+    env.start_video_recorder()
+
+    while True:
+        action = env.action_space.sample()
+        obs, reward, done, _, _ = env.step(action)
+        total_reward += reward
+        total_steps += 1
+        env.render()
+        if done:
+            break
+
+    print("Episode done in %d steps, total reward %.2f" % (
+        total_steps, total_reward))
+    ####
+    # Don't forget to close the video recorder before the env!
+    env.close_video_recorder()
+    env.close()

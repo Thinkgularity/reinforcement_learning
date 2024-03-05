@@ -22,8 +22,8 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 
-EXPERIMENT_NAME = "-cartpole_hidden_state_64"  # or -cartpole_net_architecture_v1
-HIDDEN_SIZE = 64
+EXPERIMENT_NAME = "-cartpole_hidden_state_256"  # or -cartpole_net_architecture_v1
+HIDDEN_SIZE = 256
 BATCH_SIZE = 16
 PERCENTILE = 70
 
@@ -96,6 +96,13 @@ def filter_batch(batch, percentile):
     train_act_v = torch.LongTensor(train_act)
     return train_obs_v, train_act_v, reward_bound, reward_mean
 
+def get_best_action(net, obs):
+    obs_v = torch.FloatTensor(np.array(obs)).unsqueeze(0)
+    act_probs_v = net(obs_v).softmax(dim=1)
+    act_probs = act_probs_v.data.numpy()[0]
+    action = np.random.choice(len(act_probs), p=act_probs)
+    return action
+
 
 if __name__ == "__main__":
     env = gym.make("CartPole-v1")
@@ -108,6 +115,10 @@ if __name__ == "__main__":
     writer = SummaryWriter(comment=EXPERIMENT_NAME)
     best_episodes = episodes_generator(env, net, BATCH_SIZE)
 
+    total_reward = 0.0
+    total_steps = 0
+    observation, info = env.reset()
+    
     for iter_no, batch in enumerate(best_episodes):
         obs_v, acts_v, reward_b, reward_m = filter_batch(batch, PERCENTILE)
         optimizer.zero_grad()
@@ -123,21 +134,18 @@ if __name__ == "__main__":
         if reward_m > 199:
             print("Solved!")
             break
+    ####
+    # Don't forget to close the video recorder before the env!
+    
     writer.close()
-
-
-if __name__ == "__main__":
+    
     env = gym.make("CartPole-v1", render_mode='rgb_array')
-    # env = gym.wrappers.Monitor(env, "recording")
     env = RecordVideo(env, 'video')
-
-    total_reward = 0.0
-    total_steps = 0
-    observation, info = env.reset()
+    obs, _ =  env.reset()
     env.start_video_recorder()
 
     while True:
-        action = env.action_space.sample()
+        action = get_best_action(net, obs)
         obs, reward, done, _, _ = env.step(action)
         total_reward += reward
         total_steps += 1
@@ -145,9 +153,42 @@ if __name__ == "__main__":
         if done:
             break
 
-    print("Episode done in %d steps, total reward %.2f" % (
-        total_steps, total_reward))
-    ####
-    # Don't forget to close the video recorder before the env!
+        print("Episode done in %d steps, total reward %.2f" % (
+            total_steps, total_reward))
+
     env.close_video_recorder()
     env.close()
+
+
+# if __name__ == "__main__":
+#     env = gym.make("CartPole-v1", render_mode='rgb_array')
+#     # env = gym.wrappers.Monitor(env, "recording")
+#     env = RecordVideo(env, 'video')
+    
+#     obs_size = env.observation_space.shape[0]
+#     n_actions = env.action_space.n
+#     net = Net(obs_size, HIDDEN_SIZE, n_actions)
+#     loss = nn.CrossEntropyLoss()
+#     optimizer = optim.Adam(params=net.parameters(), lr=0.01)
+#     best_episodes = episodes_generator(env, net, BATCH_SIZE)
+
+#     total_reward = 0.0
+#     total_steps = 0
+#     observation, info = env.reset()
+#     env.start_video_recorder()
+
+#     while True:
+#         action = get_best_action(net, obs)
+#         obs, reward, done, _, _ = env.step(action)
+#         total_reward += reward
+#         total_steps += 1
+#         env.render()
+#         if done:
+#             break
+
+#     print("Episode done in %d steps, total reward %.2f" % (
+#         total_steps, total_reward))
+#     ####
+#     # Don't forget to close the video recorder before the env!
+#     env.close_video_recorder()
+#     env.close()

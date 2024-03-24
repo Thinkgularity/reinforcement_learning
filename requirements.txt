@@ -1,6 +1,4 @@
-gymnasium[classic-control]
-gymnasium[atari]
-gymnasium[accept-rom-license]
+gymnasium[classic-control,atari,accept-rom-license]
 torch
 moviepy
 tensorboardX
